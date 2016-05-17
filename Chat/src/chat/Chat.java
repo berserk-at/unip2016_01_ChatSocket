@@ -26,65 +26,81 @@ import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 
 /**
  *
- * @author Antonio
+ * @author APS
+ * Projeto de chat com web Socket
+ * Esta é a classe principal que fornece interface gráfica para uso tanto no cliente como no servidor
+ * Existem 2 botões na parte superior, um com nome de Servidor e outro com nome de cliente,
+ * Clicando no botão de menu servidor, pode-se habilitar o servidor localmente quando não estiver ativo 
+ * fornecendo a porta de conexão, e quando está ativo, desabilitará o servidor.
+ * Clicando no botão de menu cliente, se não conectado, irá pedir os dados e fará a conexão com o servidor, 
+ * caso já esteja conectado, fará a desconexão com o servidor.
+ * Todas as mensagens trocadas pelos clientes são públicas e mostradas no componente JTextPane na área central da tela.
+ * No lado direito contém a lista dos usuários atualmente conectados.
+ * E na parte de baixo permite que o usuário digite a mensagem, para enviar a mensagem basta o pressionar da tecla ENTER
+ * Alguns comandos que a mensagem suporta:
+ * /sair 
+ * Desconecta do servidor
+ * 
+ * /nome=[novonome]
+ * Substitua o [novonome] pelo nome que deseja para o seu usuário
  */
 public final class Chat extends JFrame implements ActionListener, KeyListener {
 
-  public static Chat chat;
+  public static Chat chat; //Variável estática que armazenará a instância da classe Chat para ser usada por outros objetos
 
-  /**
-   * @param args the command line arguments
-   */
+  //Main de execução, não é necessário nenhum parâmetro
   public static void main(String[] args) {
     chat = new Chat();
   }
 
   public Chat() {
     super();
-    Componentes();
+    Componentes();//Desenha os componentes na tela
   }
 
-  JMenuItem mnServidor;
-  JMenuItem mnCliente;
-  JTextPane txtConteudo;
-  JScrollPane rolagem;
-  JTextField txtComando;
-  JList lstUsuarios;
-  static DefaultListModel lista;
+  JMenuItem mnServidor; //Botão de menu servidor habilita/desabilita o servidor
+  JMenuItem mnCliente; //Botão de menu cliente conecta/desconecta do servidor
+  JTextPane txtConteudo; //Componente que mostra todas as mensagens na janela central
+  JScrollPane rolagem; //Componente para permitir a rolagem das mensagens na janela central
+  JTextField txtComando; //Componente onde o usuário digita a mensagem
+  JList lstUsuarios; //Componente que mostra a lista com os usuários conectados
+  static DefaultListModel lista; // Lista com os usuários conectados
 
   public void Componentes() {
-    setTitle("Chat 1.0");
-    setSize(500, 500);
-    Dimension dm = Toolkit.getDefaultToolkit().getScreenSize();
-    setLocation((dm.width - getSize().width) / 2,
-        (dm.height - getSize().height) / 2);
+    setTitle("Chat 1.0"); //Definindo o título da janela
+    setSize(500, 500); // Definindo a largura e altura da janela
+    
+    Dimension dm = Toolkit.getDefaultToolkit().getScreenSize();//Obtendo as dimensões da tela
+    setLocation((dm.width - getSize().width) / 2, (dm.height - getSize().height) / 2); //centralizando a janela na tela
 
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    JPanel fundo = new JPanel();
-    fundo.setLayout(new BorderLayout(3, 3));
-    getContentPane().add(fundo);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Definindo que ao fechar a janela deve finalizar o programa
+    
+    JPanel fundo = new JPanel(); //Painel de fundo
+    fundo.setLayout(new BorderLayout(3, 3)); //Definindo o layout dos componentes contidos para usarem borda e manterem uma distância de 3 pixels na horizontal e vertical
+    getContentPane().add(fundo); // adicionadno o painel de fundo a tela
 
-    JLabel rotBemVindo = new JLabel("<html><b>Bem Vindo ao Chat 1.0</b></html>");
-    fundo.add(rotBemVindo, BorderLayout.NORTH);
+    JLabel rotBemVindo = new JLabel("<html><b>Bem Vindo ao Chat 1.0</b></html>");//Rotulo para mostrar uma mensagem amigável ao usuário
+    fundo.add(rotBemVindo, BorderLayout.NORTH); // Adiciona a mensagem ao topo da tela
 
-    txtComando = new JTextField();
-    txtComando.addKeyListener(this);
-    fundo.add(txtComando, BorderLayout.SOUTH);
+    txtComando = new JTextField(); //Componente onde o usuário digita a mensagem
+    txtComando.addKeyListener(this); // Definir para esta janela tratar os eventos de teclado
+    fundo.add(txtComando, BorderLayout.SOUTH); // Adicionando ao rodapé da tela
 
-    lista = new DefaultListModel();
-    lstUsuarios = new JList(lista);
-    lstUsuarios.setSelectionMode(SINGLE_SELECTION);
-    fundo.add(lstUsuarios, BorderLayout.EAST);
+    lista = new DefaultListModel(); //Inicializa a lista com nenhum elemento
+    lstUsuarios = new JList(lista);//Cria o componente que mostrará a lista e a variável DefaultListModel que armazenará a lista
+    lstUsuarios.setSelectionMode(SINGLE_SELECTION); //Define para permitir selecionar apenas um ítem por vez
+    fundo.add(lstUsuarios, BorderLayout.EAST); // Adiciona o componente na lateral direita
 
-    txtConteudo = new JTextPane();
-    txtConteudo.setContentType("text/html");
-    rolagem= new JScrollPane(txtConteudo);
-    rolagem.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-		    BoundedRangeModel brm = rolagem.getVerticalScrollBar().getModel();
-		    boolean wasAtBottom = true;
+    txtConteudo = new JTextPane();//Componente que mostrará as mensagens
+    txtConteudo.setContentType("text/html");//Define para que ele aceite html
+    rolagem= new JScrollPane(txtConteudo);//Componente para permitir a rolagem das mensagens na janela central
+    rolagem.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() { 
+      //Aqui fará o controle para garantir que a rolagem sempre que alterada irá rolar automaticamente para o fim, mostrando as últimas mensagens
+		    BoundedRangeModel brm = rolagem.getVerticalScrollBar().getModel();//Define a estrutura que será observada
+		    boolean wasAtBottom = true; // 
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent arg0) {
-				// TODO Auto-generated method stub
+				// Está é o evento responsável por capturar as mudanças
 				 if (!brm.getValueIsAdjusting()) {
 			           if (wasAtBottom)
 			              brm.setValue(brm.getMaximum());
@@ -165,7 +181,7 @@ public final class Chat extends JFrame implements ActionListener, KeyListener {
           Cliente.conectar(txtServidor.getText(), Integer.parseInt(txtPorta.getText()), txtNome.getText());
         }
       } catch (Exception ex) {
-
+        ex.printStackTrace();
       }
 
     } else {
@@ -175,12 +191,9 @@ public final class Chat extends JFrame implements ActionListener, KeyListener {
 
   public static void atualizarListaClientes() {
     lista.clear();
-    for (InterageCliente clienteSel : InterageCliente.clientes) {
-      System.out.println("Lista="+clienteSel.nome);
-      if (clienteSel.conexao.isConnected()){
-        lista.addElement(clienteSel.nome);
-      }
-    }
+    InterageCliente.clientes.stream().filter((clienteSel) -> (clienteSel.conexao.isConnected())).forEach((clienteSel) -> {
+      lista.addElement(clienteSel.nome);
+    });
   }
   public static void atualizarListaClientes(StringBuilder dados) {
     int inicio=0;

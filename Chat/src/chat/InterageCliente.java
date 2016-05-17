@@ -10,7 +10,6 @@ import java.io.PrintStream;
 import java.io.Writer;
 import java.net.Socket;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -57,7 +56,6 @@ public class InterageCliente extends Thread {
       conexao.close();
     } catch (Exception ex) {
       ex.printStackTrace();
-//      JOptionPane.showMessageDialog(null, "Problema");
     }
     System.out.println("Passou aqui fim");
   }

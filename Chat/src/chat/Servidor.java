@@ -1,19 +1,10 @@
 package chat;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 
 /**
  *
@@ -23,14 +14,7 @@ public class Servidor extends Thread {
 
   private static ServerSocket server;
 
-  /**
-   * Método construtor
-   *
-   * @param com do tipo Socket
-   */
-  /**
-   * Método run
-   */
+  @Override
   public void run() {
     try {
       while (true) {
@@ -60,7 +44,7 @@ public class Servidor extends Thread {
       Chat.adicionarMensagem("Servidor local iniciado na porta " + porta);
 
     } catch (Exception e) {
-
+      JOptionPane.showMessageDialog(null, "Não foi possível iniciar o servidor");
       e.printStackTrace();
     }
   }
@@ -68,10 +52,8 @@ public class Servidor extends Thread {
   public void enviarTodos(String mensagem) {
     BufferedWriter bwS;
 
-    for (InterageCliente clienteSel : InterageCliente.clientes) {
-      if (clienteSel.isAlive() && clienteSel.conexao.isConnected()){
-        clienteSel.enviar(mensagem);
-      }
-    }
+    InterageCliente.clientes.stream().filter((clienteSel) -> (clienteSel.isAlive() && clienteSel.conexao.isConnected())).forEach((clienteSel) -> {
+      clienteSel.enviar(mensagem);
+    });
   }
 }
