@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package chat;
 
 import java.io.BufferedReader;
@@ -26,7 +21,6 @@ import javax.swing.JTextField;
  */
 public class Servidor extends Thread {
 
-  private static ArrayList<Cliente> clientes;
   private static ServerSocket server;
 
   /**
@@ -34,68 +28,50 @@ public class Servidor extends Thread {
    *
    * @param com do tipo Socket
    */
- 
-
   /**
    * Método run
    */
   public void run() {
-    try{
+    try {
       while (true) {
         System.out.println("Aguardar cliente");
         Socket con = server.accept();
         System.out.println("Cliente conectado");
-        clientes.add(new Cliente(con));
+        InterageCliente cliente = new InterageCliente(con);
+        InterageCliente.clientes.add(cliente);
+        cliente.start();
+
         Chat.atualizarListaClientes();
       }
-    } catch(Exception ex){
-      
-    }
+    } catch (Exception ex) {
 
-//    try {
-//
-//
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//
-//    }
+    }
   }
 
-  /**
-   * *
-   * Método usado para enviar mensagem para todos os clients
-   *
-   * @param bwSaida do tipo BufferedWriter
-   * @param msg do tipo String
-   * @throws IOException
-   */
-//  public void sendToAll(BufferedWriter bwSaida, String msg) throws IOException {
-//    BufferedWriter bwS;
-//
-//    for (BufferedWriter bw : clientes) {
-//      bwS = (BufferedWriter) bw;
-//      if (!(bwSaida == bwS)) {
-//        bw.write(nome + " -> " + msg + "\r\n");
-//        bw.flush();
-//      }
-//    }
-//  }
-
   public static Servidor servidor;
-  
+
   public static void Iniciar(int porta) {
     try {
       server = new ServerSocket(porta);
-      clientes = new ArrayList<>();
+      InterageCliente.clientes = new ArrayList<>();
 
-      servidor=new Servidor();
+      servidor = new Servidor();
       servidor.start();
-      Chat.adicionarMensagem("Servidor local iniciado na porta "+porta);
-      
+      Chat.adicionarMensagem("Servidor local iniciado na porta " + porta);
+
     } catch (Exception e) {
 
       e.printStackTrace();
     }
   }
 
-} //Fim da classe
+  public void enviarTodos(String mensagem) {
+    BufferedWriter bwS;
+
+    for (InterageCliente clienteSel : InterageCliente.clientes) {
+      if (clienteSel.isAlive() && clienteSel.conexao.isConnected()){
+        clienteSel.enviar(mensagem);
+      }
+    }
+  }
+}
