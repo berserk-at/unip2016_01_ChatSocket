@@ -98,7 +98,7 @@ public final class Chat extends JFrame implements ActionListener, KeyListener {
       //Aqui fará o controle para garantir que a rolagem sempre que alterada irá rolar automaticamente para o fim, mostrando as últimas mensagens
 		    BoundedRangeModel brm = rolagem.getVerticalScrollBar().getModel();//Define a estrutura que será observada
 		    boolean wasAtBottom = true; // 
-			@Override
+			@Override 
 			public void adjustmentValueChanged(AdjustmentEvent arg0) {
 				// Está é o evento responsável por capturar as mudanças
 				 if (!brm.getValueIsAdjusting()) {
