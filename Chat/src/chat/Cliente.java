@@ -26,6 +26,7 @@ public class Cliente extends Thread {
     this.conexao = conexao;
   }
 
+  //Sobrescreve a execução da thread de cliente fazendo ela aguardar o recebimento de mensagens do servidor
   @Override
   public void run() {
     try {
@@ -49,6 +50,7 @@ public class Cliente extends Thread {
     System.out.println("Passou aqui fim");
   }
   
+  //Realiza a desconexão com o servidor
   public void desconectar() {
     cliente = null;
     try{
@@ -59,7 +61,7 @@ public class Cliente extends Thread {
     Chat.adicionarMensagem("Desconectado do servidor");
   }
 
-  
+  //Realiza a conexão com o servidor a partir dos parâmetros de IP, porta e nome para o cliente
   public static void conectar(String servidor, int porta, String nome) {
     try{
       Socket socket = new Socket(servidor, porta);
@@ -73,6 +75,7 @@ public class Cliente extends Thread {
     }
   }
 
+  // Envia mensagem para o servidor
   public void enviarMensagem(String mensagem) throws IOException {
     OutputStream ou =  this.conexao.getOutputStream();
     Writer ouw = new OutputStreamWriter(ou);
