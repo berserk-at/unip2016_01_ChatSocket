@@ -125,7 +125,9 @@ public final class Chat extends JFrame implements ActionListener, KeyListener {
     txtComando.requestFocus();
   }
 
-  @Override
+  @Override 
+  //Sobrescreve a função que é executada quando um componente é clicado
+  // Aqui será tratados os eventos para o botão servidor e para o botão cliente
   public void actionPerformed(ActionEvent e) {
     if (e.getActionCommand().equals(mnServidor.getActionCommand())) {
       clickServidor();
@@ -136,11 +138,13 @@ public final class Chat extends JFrame implements ActionListener, KeyListener {
 
   static StringBuilder conteudo = new StringBuilder();
 
+  //Atualiza a janela central adicionando a mensagem recebida pela função
   public static void adicionarMensagem(String mensagem) {
     conteudo.append(mensagem).append("<br>");
     chat.txtConteudo.setText("<html><body>" + conteudo.toString() + "<body></html>");
   }
 
+  //Quando o botão do servidor for clicado, pede a porta ao usuário e inicia a instância do servidor
   public void clickServidor() {
     if (Servidor.servidor == null) {
       try {
@@ -164,6 +168,7 @@ public final class Chat extends JFrame implements ActionListener, KeyListener {
     }
   }
 
+  // Quando o botão do cliente é pressionado, pede os dados para conexão com o servidor(IP, porta e nome) e realiza a conexão com o servidor
   public void clickCliente() {
     if (Cliente.cliente == null) {
       try {
@@ -189,12 +194,15 @@ public final class Chat extends JFrame implements ActionListener, KeyListener {
     }
   }
 
+  //Atualiza a lista do lado direito com o nome dos clientes conectados no servidor, usando o array de interageCliente
   public static void atualizarListaClientes() {
     lista.clear();
     InterageCliente.clientes.stream().filter((clienteSel) -> (clienteSel.conexao.isConnected())).forEach((clienteSel) -> {
       lista.addElement(clienteSel.nome);
     });
   }
+  
+  //Obtém a lista de clientes que estão no servidor para atualizar na instância de cliente a lista do lado direito
   public static void atualizarListaClientes(StringBuilder dados) {
     int inicio=0;
     int fim=dados.indexOf(",");
@@ -208,6 +216,7 @@ public final class Chat extends JFrame implements ActionListener, KeyListener {
     lista.addElement(dados.substring(inicio));
   }
 
+  //Captura o pressionar do enter para enviar a mensagem
   @Override
   public void keyPressed(KeyEvent e) {
     if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -235,6 +244,7 @@ public final class Chat extends JFrame implements ActionListener, KeyListener {
   public void keyReleased(KeyEvent e) {
   }
 
+  //Serve pra subtituir uma parte de string dentro de outra string
   public static String Substituir(String palavra, String encontrar, String substituir) {
     if (palavra==null || palavra.equals("")){
       return("");
@@ -245,6 +255,7 @@ public final class Chat extends JFrame implements ActionListener, KeyListener {
     }
   }
 
+  //Subtitui o conteúdo de linha, de uma string para outra
   public static void Substituir(StringBuilder linha, String encontrar, String substituir) {
     if (substituir == null) {
       substituir = "";
