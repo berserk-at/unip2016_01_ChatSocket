@@ -8,12 +8,15 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author Antonio
+ * @author aps
+ * Classe responsável pela instância de conexão no servidor
+ * 
  */
 public class Servidor extends Thread {
 
   private static ServerSocket server;
 
+  //Sobrescreve a execução da thread para aguardar a conexão de clientes
   @Override
   public void run() {
     try {
@@ -34,6 +37,7 @@ public class Servidor extends Thread {
 
   public static Servidor servidor;
 
+  //Iniciar o servidor na porta especificada
   public static void Iniciar(int porta) {
     try {
       server = new ServerSocket(porta);
@@ -49,6 +53,7 @@ public class Servidor extends Thread {
     }
   }
 
+  //Envia mensagem para todos os clientes
   public void enviarTodos(String mensagem) {
     BufferedWriter bwS;
 
