@@ -14,6 +14,8 @@ import java.io.Writer;
 import java.net.Socket;
 import javax.swing.*;
 
+//Classe de cliente que é gerada quando o chat é iniciado a instância de cliente, utilizada pra conexão
+// com o servidor, permitindo receber e enviar mensagens.
 public class Cliente extends Thread {
   
   private String nome;
