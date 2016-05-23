@@ -13,7 +13,8 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Antonio
+ * @author aps
+ * Classe criada e executada pelo servidor pra realizar o envio de informações para o cliente
  */
 public class InterageCliente extends Thread {
 
@@ -26,6 +27,7 @@ public class InterageCliente extends Thread {
     this.conexao = conexao;
   }
 
+  //Sobrescreve a execução da thread de InterageCliente pra aguardar o recebimento de dados vindos do cliente
   @Override
   public void run() {
     try {
@@ -60,6 +62,7 @@ public class InterageCliente extends Thread {
     System.out.println("Passou aqui fim");
   }
 
+  //Envia mensagem para o cliente
   public void enviar(String mensagem) {
     try {
       OutputStream ou = conexao.getOutputStream();
@@ -73,6 +76,7 @@ public class InterageCliente extends Thread {
     }
   }
   
+  //Lista os clientes conectados ao servidor
   public String listaClientes(){
     StringBuilder lista=new StringBuilder();
     boolean primeiro=true;
