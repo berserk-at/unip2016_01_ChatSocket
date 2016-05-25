@@ -56,6 +56,7 @@ public class InterageCliente extends Thread {
         mensagem = entrada.readLine();
       }
       conexao.close();
+      Chat.atualizarListaClientes();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
