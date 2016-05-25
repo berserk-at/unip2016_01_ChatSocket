@@ -56,11 +56,11 @@ public class InterageCliente extends Thread {
         mensagem = entrada.readLine();
       }
       conexao.close();
-      Chat.atualizarListaClientes();
     } catch (Exception ex) {
       ex.printStackTrace();
     }
-    System.out.println("Passou aqui fim");
+    Chat.adicionarMensagem("O usuário <b>"+this.nome+"</b> desconectou.");
+    Chat.atualizarListaClientes();
   }
 
   //Envia mensagem para o cliente
