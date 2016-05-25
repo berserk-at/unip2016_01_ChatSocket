@@ -66,6 +66,7 @@ public class InterageCliente extends Thread {
     }
     Chat.adicionarMensagem("O usuário <b>"+this.nome+"</b> desconectou.");
     Chat.atualizarListaClientes();
+    Servidor.servidor.enviarTodos("/lista="+listaClientes());
   }
 
   //Envia mensagem para o cliente
