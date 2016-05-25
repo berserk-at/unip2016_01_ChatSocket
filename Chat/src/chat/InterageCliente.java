@@ -55,7 +55,12 @@ public class InterageCliente extends Thread {
         }
         mensagem = entrada.readLine();
       }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+    try{
       conexao.close();
+      clientes.remove(this);
     } catch (Exception ex) {
       ex.printStackTrace();
     }
